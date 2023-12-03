@@ -1,4 +1,7 @@
+import os
+
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 
 from apps.file_sharing.forms import FileUploadForm
@@ -24,4 +27,13 @@ def upload_file(request):
         'form': form
     })
 
-
+@login_required
+def download_file(request, file_id):
+    file = SharedFile.objects.get(id=file_id)
+    file_path = file.file.path
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/octet-stream")
+            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+            return response
+    raise Http404

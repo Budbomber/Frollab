@@ -5,6 +5,7 @@ from django.urls import path
 from apps.task_management import views
 from apps.users.views import signup
 from apps.file_sharing.views import upload_file, file_list
+from apps.file_sharing.views import download_file
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -17,4 +18,5 @@ urlpatterns = [
     path('tasks/<int:pk>/delete/', views.task_delete, name='task_delete'),
     path('files/upload/', upload_file, name='upload_file'),
     path('files/', file_list, name='file_list'),
+    path('files/download/<int:file_id>/', download_file, name='download_file')
 ]

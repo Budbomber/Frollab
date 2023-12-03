@@ -9,7 +9,11 @@
     <h2>Files</h2>
     <ul>
         {% for file in files %}
-            <li>{{ file.title }} - Uploaded by {{ file.owner }} on {{ file.uploaded_at }}</li>
+            <li>
+                {{ file.title }} - Uploaded by {{ file.owner }} on {{ file.uploaded_at }}
+                <!-- Add a download link -->
+                <a href="{% url 'download_file' file.id %}" class="btn btn-primary">Download</a>
+            </li>
         {% endfor %}
     </ul>
 </div>
