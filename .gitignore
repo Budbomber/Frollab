@@ -3,6 +3,7 @@ __pycache__/
 db.sqlite3
 .vscode/
 .idea/
+.shared_files/
 *.swp
 *.swo
 *.DS_Store
