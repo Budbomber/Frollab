@@ -8,3 +8,8 @@ db.sqlite3
 *.DS_Store
 *.env
 /shared_files/
+/apps/communication/migrations/
+/apps/file_sharing/migrations/
+/apps/task_management/migrations/
+/apps/user_dashboard/migrations/
+/apps/users/migrations/
