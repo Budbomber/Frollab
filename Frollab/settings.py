@@ -28,6 +28,12 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+LOGIN_REDIRECT_URL = 'home'  # Redirect to home page after login
+LOGOUT_REDIRECT_URL = 'login'  # Redirect to login page after logout
 
 # Application definition
 
@@ -42,6 +48,7 @@ INSTALLED_APPS = [
     'apps.file_sharing',
     'apps.user_dashboard',
     'apps.task_management',
+    'apps.users',
 ]
 
 MIDDLEWARE = [
