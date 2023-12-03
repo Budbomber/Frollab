@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <title>Task List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h2>Task List</h2>
+    <a href="{% url 'task_create' %}" class="btn btn-primary">Add New Task</a>
+    <ul>
+        {% for task in tasks %}
+            <li>
+                {{ task.title }} - {{ task.status }}
+                <a href="{% url 'task_update' task.id %}">Edit</a>
+                <a href="{% url 'task_delete' task.id %}">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>
