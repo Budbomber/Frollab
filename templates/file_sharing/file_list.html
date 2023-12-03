@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <title>File List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h2>Files</h2>
+    <ul>
+        {% for file in files %}
+            <li>{{ file.title }} - Uploaded by {{ file.owner }} on {{ file.uploaded_at }}</li>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>
