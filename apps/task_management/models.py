@@ -15,4 +15,5 @@ class Task(models.Model):
     deadline = models.DateTimeField()
 
     def __str__(self):
-        return self.title + self.status + str(self.owner) + str(self.deadline)
+        return f"{self.title} - {self.get_status_display()} - {self.owner} - {self.deadline.strftime('%Y-%m-%d %H:%M')}"
+
