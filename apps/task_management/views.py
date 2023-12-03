@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Task
 from .forms import TaskForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 
 @login_required
@@ -38,6 +38,7 @@ def task_update(request, pk):
 
 
 @login_required
+@permission_required('task_management.delete_task', raise_exception=True)
 def task_delete(request, pk):
     task = get_object_or_404(Task, pk=pk, owner=request.user)
     if request.method == 'GET':

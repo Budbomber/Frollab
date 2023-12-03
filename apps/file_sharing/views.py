@@ -1,8 +1,8 @@
 import os
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponse, Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from apps.file_sharing.forms import FileUploadForm
 from apps.file_sharing.models import SharedFile
@@ -28,6 +28,7 @@ def upload_file(request):
     })
 
 @login_required
+@permission_required('file_sharing.view_sharedfile', raise_exception=True)
 def download_file(request, file_id):
     file = SharedFile.objects.get(id=file_id)
     file_path = file.file.path
@@ -37,3 +38,12 @@ def download_file(request, file_id):
             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
             return response
     raise Http404
+
+@login_required
+@permission_required('file_sharing.delete_sharedfile', raise_exception=True)
+def delete_file(request, file_id):
+    file = get_object_or_404(SharedFile, id=file_id, owner=request.user)
+    if request.method == 'POST':
+        file.delete()
+        return redirect('file_list')
+    return render(request, 'file_sharing/file_confirm_delete.html', {'file': file})
