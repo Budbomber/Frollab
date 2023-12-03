@@ -1,7 +1,4 @@
-
 # Frollab
-
-## Description
 Frollab is a Django-based web application designed for task management, file sharing, and internal communication. It's tailored for teams and individuals who seek a streamlined way to organize and collaborate on projects.
 
 ## Features
