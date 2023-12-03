@@ -15,7 +15,7 @@ def upload_file(request):
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
             shared_file = form.save(commit=False)
-            shared_file.uploaded_by = request.user
+            shared_file.owner = request.user
             shared_file.save()
             return redirect('file_list')
     else:
