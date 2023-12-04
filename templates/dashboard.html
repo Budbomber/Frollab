@@ -10,9 +10,13 @@
     <h1>Dashboard</h1>
 
     <h2>Your Tasks</h2>
+    <a href="{% url 'task_create'%}?next=dashboard">Add New Task</a>
     <ul>
         {% for task in user_tasks %}
-            <li>{{ task.title }} - {{ task.status }}</li>
+            <li>{{ task.title }} - {{ task.status }}
+            <a href="{% url 'task_update' task.id %}">Edit</a>
+            <a href="{% url 'task_delete' task.id %}">Delete</a>
+            </li>
         {% empty %}
             <li>No tasks found</li>
         {% endfor %}
@@ -31,6 +35,19 @@
             <li>No files found</li>
         {% endfor %}
     </ul>
+
+    <h2>Your Messages</h2>
+    <ul>
+        {% for message in user_messages %}
+            <li>
+                From: {{ message.sender.username }} - {{ message.subject }}
+                <p>{{ message.message|truncatechars:50 }}</p>  <!-- Show a preview of the message -->
+            </li>
+        {% empty %}
+            <li>No messages found</li>
+        {% endfor %}
+    </ul>
+
 
 </div>
 </body>

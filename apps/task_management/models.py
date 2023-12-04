@@ -12,8 +12,9 @@ class Task(models.Model):
     description = models.TextField()
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tasks', on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='todo')
-    deadline = models.DateTimeField()
+    deadline_date = models.DateField(null=True)
+    deadline_time = models.TimeField(null=True)
 
     def __str__(self):
-        return f"{self.title} - {self.get_status_display()} - {self.owner} - {self.deadline.strftime('%Y-%m-%d %H:%M')}"
-
+        return (f"{self.title} - {self.get_status_display()} - {self.owner} -"
+                f" {self.deadline_date} - {self.deadline_time}")
