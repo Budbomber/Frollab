@@ -38,7 +38,6 @@ def task_update(request, pk):
 
 
 @login_required
-@permission_required('task_management.delete_task', raise_exception=True)
 def task_delete(request, pk):
     task = get_object_or_404(Task, pk=pk, owner=request.user)
     if request.method == 'GET':

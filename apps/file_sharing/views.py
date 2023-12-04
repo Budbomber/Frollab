@@ -12,6 +12,8 @@ from apps.file_sharing.models import SharedFile
 def file_list(request):
     files = SharedFile.objects.all()  # Adjust the query as needed
     return render(request, 'file_sharing/file_list.html', {'files': files})
+
+
 @login_required
 def upload_file(request):
     if request.method == 'POST':
@@ -27,8 +29,8 @@ def upload_file(request):
         'form': form
     })
 
+
 @login_required
-@permission_required('file_sharing.view_sharedfile', raise_exception=True)
 def download_file(request, file_id):
     file = SharedFile.objects.get(id=file_id)
     file_path = file.file.path
@@ -39,8 +41,8 @@ def download_file(request, file_id):
             return response
     raise Http404
 
+
 @login_required
-@permission_required('file_sharing.delete_sharedfile', raise_exception=True)
 def delete_file(request, file_id):
     file = get_object_or_404(SharedFile, id=file_id, owner=request.user)
     if request.method == 'POST':

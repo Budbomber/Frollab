@@ -6,7 +6,7 @@ from django.conf import settings
 
 class SharedFile(models.Model):
     title = models.CharField(max_length=100, default='default title')
-    file = models.FileField(upload_to='shared_files')
+    file = models.FileField(upload_to='')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
