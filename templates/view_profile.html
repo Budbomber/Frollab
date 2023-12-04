@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Profile</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h2>User Profile</h2>
+    <div>
+        <strong>Organization:</strong> {{ profile.organization }}
+    </div>
+    <div>
+        <strong>Job Title:</strong> {{ profile.job_title }}
+    </div>
+    <div>
+        <strong>Bio:</strong> {{ profile.bio }}
+    </div>
+    <div>
+        <strong>Location:</strong> {{ profile.location }}
+    </div>
+    <div>
+        <strong>Contact Number:</strong> {{ profile.contact_number }}
+    </div>
+    <div>
+        <strong>Website URL:</strong> <a href="{{ profile.website_url }}">{{ profile.website_url }}</a>
+    </div>
+    <div>
+        {% if profile.profile_picture %}
+            <img src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+        {% endif %}
+    </div>
+    <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/umd.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

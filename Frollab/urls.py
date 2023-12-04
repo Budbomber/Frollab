@@ -5,7 +5,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from apps.task_management import views
-from apps.users.views import signup
+from apps.users.views import signup, edit_profile, view_profile
 from apps.file_sharing.views import upload_file, file_list, delete_file
 from apps.file_sharing.views import download_file
 from apps.user_dashboard.views import Dashboard
@@ -24,6 +24,8 @@ urlpatterns = [
     path('files/download/<int:file_id>/', download_file, name='download_file'),
     path('files/delete/<int:file_id>/', delete_file, name='delete_file'),
     path('dashboard/', Dashboard.as_view(), name='dashboard'),
+    path('profile/edit', edit_profile, name='edit_profile'),
+    path('profile/view', view_profile, name='view_profile'),
 ]
 
 if settings.DEBUG:

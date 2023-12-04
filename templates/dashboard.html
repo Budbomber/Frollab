@@ -8,14 +8,15 @@
 <body>
 <div class="container">
     <h1>Dashboard</h1>
-
+    <a href="{% url 'view_profile' %}">View Profile</a>
+    <a href="{% url 'edit_profile' %}">Edit Profile</a>
     <h2>Your Tasks</h2>
-    <a href="{% url 'task_create'%}?next=dashboard">Add New Task</a>
+    <a href="{% url 'task_create' %}?next=dashboard">Add New Task</a>
     <ul>
         {% for task in user_tasks %}
             <li>{{ task.title }} - {{ task.status }}
-            <a href="{% url 'task_update' task.id %}">Edit</a>
-            <a href="{% url 'task_delete' task.id %}">Delete</a>
+                <a href="{% url 'task_update' task.id %}">Edit</a>
+                <a href="{% url 'task_delete' task.id %}">Delete</a>
             </li>
         {% empty %}
             <li>No tasks found</li>

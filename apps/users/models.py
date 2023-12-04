@@ -14,7 +14,7 @@ class UserProfile(models.Model):
     bio = models.TextField(blank=True)
     location = models.CharField(max_length=100, blank=True)
     contact_number = models.CharField(max_length=100, blank=True)
-    website_url = models.URLField(blank=True)
+    website_url = models.CharField(max_length=100, blank=True)
 
     def assigned_tasks(self):
         return Task.objects.filter(assignee=self.user)
