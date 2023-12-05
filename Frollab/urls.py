@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
+from apps.communication.views import view_message, delete_message
 from apps.task_management import views
 from apps.users.views import signup, edit_profile, view_profile
 from apps.file_sharing.views import upload_file, file_list, delete_file
@@ -27,6 +28,8 @@ urlpatterns = [
     path('dashboard/', Dashboard.as_view(), name='dashboard'),
     path('profile/edit', edit_profile, name='edit_profile'),
     path('profile/view', view_profile, name='view_profile'),
+    path('message/<int:message_id>/', view_message, name='view_message'),
+    path('message/<int:message_id>/delete/', delete_message, name='delete_message'),
 ]
 
 if settings.DEBUG:

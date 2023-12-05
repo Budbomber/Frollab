@@ -45,6 +45,14 @@
             <li>
                 From: {{ message.sender.username }} - {{ message.subject }}
                 <p>{{ message.message|truncatechars:50 }}</p>  <!-- Show a preview of the message -->
+                <a href="{% url 'view_message' message.id %}" class="btn btn-primary btn-sm">View</a>
+                <form action="{% url 'delete_message' message.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger"
+                            onclick="return confirm('Are you sure you want to delete this message?');">
+                        Delete
+                    </button>
+                </form>
             </li>
         {% empty %}
             <li>No messages found</li>
