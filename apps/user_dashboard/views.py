@@ -9,7 +9,18 @@ from apps.task_management.views import TaskForm
 
 
 class Dashboard(LoginRequiredMixin, View):
+    """
+    The Dashboard class provides functionality for the user dashboard page.
 
+    It includes methods for displaying and handling user tasks, shared files, and messages.
+
+    Inherits:
+        LoginRequiredMixin: A Django mixin to enforce authentication for accessing the dashboard.
+
+    Methods:
+        get: Handles GET requests and renders the dashboard page.
+        post: Handles POST requests and adds a new task to the user's task list.
+    """
     def get(self, request):
         user_tasks = Task.objects.filter(owner=request.user)
         user_files = SharedFile.objects.filter(owner=request.user)

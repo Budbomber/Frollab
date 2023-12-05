@@ -8,6 +8,16 @@ from .models import UserProfile
 
 # Create your views here.
 def signup(request):
+    """
+    Handles the signup process for new users.
+
+    Parameters:
+    - request (HttpRequest): The HTTP request object.
+
+    Returns:
+    - HttpResponse: The HTTP response object containing the rendered template.
+
+    """
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -21,6 +31,23 @@ def signup(request):
 
 @login_required
 def logout_request(request):
+    """
+
+    This method handles the logout functionality for a logged-in user.
+
+    Parameters:
+    - request (object): The HTTP request object.
+
+    Returns:
+    - If the request method is 'POST':
+        - Redirects the user to the login page after logging out successfully.
+    - If the request method is not 'POST':
+        - Renders the 'logout.html' template.
+
+    Example Usage:
+    logout_request(request)
+
+    """
     if request.method == 'POST':
         logout(request)
         messages.info(request, "Logged out successfully!")
@@ -30,6 +57,19 @@ def logout_request(request):
 
 @login_required
 def edit_profile(request):
+    """
+
+    Edit Profile
+
+    This method allows a user to edit their profile information. The method is accessed through a POST request to the '/edit_profile/' URL and is only available to logged-in users.
+
+    Parameters:
+    - request: The HTTP request object.
+
+    Example usage:
+    edit_profile(request)
+
+    """
     try:
         profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
@@ -46,6 +86,21 @@ def edit_profile(request):
 
 @login_required
 def view_profile(request):
+    """
+
+    View the user profile.
+
+    This method is a view function that displays the user's profile. It is only accessible to authenticated users,
+    meaning users who have already logged in. The method retrieves the user's profile from the database and renders
+    the view_profile.html template with the profile data.
+
+    Parameters:
+    - request: The HTTP request object.
+
+    Returns:
+    - A rendered template response that displays the user's profile.
+
+    """
     try:
         profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
