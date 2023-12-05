@@ -19,7 +19,7 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
-
+@login_required
 def logout_request(request):
     if request.method == 'POST':
         logout(request)
@@ -35,7 +35,7 @@ def edit_profile(request):
     except UserProfile.DoesNotExist:
         profile = UserProfile.objects.create(user=request.user)
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=profile)
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
             return redirect('view_profile')
