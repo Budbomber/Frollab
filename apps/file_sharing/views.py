@@ -9,6 +9,7 @@ from apps.file_sharing.models import SharedFile
 
 
 # Create your views here.
+@login_required
 def file_list(request):
     files = SharedFile.objects.all()  # Adjust the query as needed
     return render(request, 'file_sharing/file_list.html', {'files': files})

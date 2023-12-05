@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -7,9 +8,9 @@ from apps.task_management.models import Task
 from apps.task_management.views import TaskForm
 
 
-class Dashboard(View):
-    @staticmethod
-    def get(request):
+class Dashboard(LoginRequiredMixin, View):
+
+    def get(self, request):
         user_tasks = Task.objects.filter(owner=request.user)
         user_files = SharedFile.objects.filter(owner=request.user)
         user_messages = Message.objects.filter(receiver=request.user)

@@ -23,6 +23,8 @@
         {% endfor %}
     </ul>
 
+    <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+
     <h2>Your Files</h2>
     <ul>
         {% for file in user_files %}

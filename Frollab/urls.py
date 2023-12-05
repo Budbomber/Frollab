@@ -9,11 +9,12 @@ from apps.users.views import signup, edit_profile, view_profile
 from apps.file_sharing.views import upload_file, file_list, delete_file
 from apps.file_sharing.views import download_file
 from apps.user_dashboard.views import Dashboard
+from apps.users.views import logout_request
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='login.html'), name='logout'),
+    path('logout/', logout_request, name='logout'),
     path('signup/', signup, name='signup'),
     path('tasks/', views.task_list, name='task_list'),
     path('tasks/create/', views.task_create, name='task_create'),

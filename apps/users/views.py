@@ -1,3 +1,6 @@
+from django.contrib import messages
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import SignUpForm, UserProfileForm
 from .models import UserProfile
@@ -17,6 +20,15 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 
+def logout_request(request):
+    if request.method == 'POST':
+        logout(request)
+        messages.info(request, "Logged out successfully!")
+        return redirect('login')
+    return render(request, 'logout.html')
+
+
+@login_required
 def edit_profile(request):
     try:
         profile = UserProfile.objects.get(user=request.user)
@@ -32,6 +44,7 @@ def edit_profile(request):
     return render(request, 'edit_profile.html', {'form': form})
 
 
+@login_required
 def view_profile(request):
     try:
         profile = UserProfile.objects.get(user=request.user)
