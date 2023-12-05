@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Compose Message</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1>Compose New Message</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <label for="id_receiver">Receiver:</label>
+            {{ form.receiver }}
+            {% if form.receiver.errors %}
+                <div class="alert alert-danger">
+                    {{ form.receiver.errors }}
+                </div>
+            {% endif %}
+        </div>
+        <div>
+            <label for="id_subject">Subject:</label>
+            {{ form.subject }}
+        </div>
+        <div>
+            <label for="id_message">Message:</label>
+            {{ form.message }}
+        </div>
+        <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+</div>
+</body>
+</html>

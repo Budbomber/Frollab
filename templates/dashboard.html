@@ -40,6 +40,7 @@
     </ul>
 
     <h2>Your Messages</h2>
+    <a href="{% url 'compose_message' %}" class="btn btn-primary">Compose Message</a>
     <ul>
         {% for message in user_messages %}
             <li>
