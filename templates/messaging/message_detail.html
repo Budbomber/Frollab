@@ -11,7 +11,20 @@
     <p><strong>Subject:</strong> {{ message.subject }}</p>
     <p>{{ message.message }}</p>
     <p><small>Sent on: {{ message.created_at|date:"d M Y H:i" }}</small></p>
+
+    <div class="reply-form">
+        <h2>Reply to Message</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ reply_form.as_p }}
+            <button type="submit" class="btn btn-primary">Send Reply</button>
+        </form>
+    </div>
     <a href="{% url 'dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>
