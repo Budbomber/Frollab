@@ -5,16 +5,17 @@ from apps.communication.models import Message
 
 
 class ReplyForm(forms.ModelForm):
+    # noinspection PyUnresolvedReferences
     """
-       A form for replying to a message.
+           A form for replying to a message.
 
-       Inherits from django.forms.ModelForm.
+           Inherits from django.forms.ModelForm.
 
-       Attributes:
-           model (class): The model class to use for the form.
-           fields (list): The list of fields to display in the form.
+           Attributes:
+               model (class): The model class to use for the form.
+               fields (list): The list of fields to display in the form.
 
-       """
+           """
 
     class Meta:
         model = Message

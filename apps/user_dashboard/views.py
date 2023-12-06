@@ -21,7 +21,8 @@ class Dashboard(LoginRequiredMixin, View):
         get: Handles GET requests and renders the dashboard page.
         post: Handles POST requests and adds a new task to the user's task list.
     """
-    def get(self, request):
+    @staticmethod
+    def get(request):
         user_tasks = Task.objects.filter(owner=request.user)
         user_files = SharedFile.objects.filter(owner=request.user)
         user_messages = Message.objects.filter(receiver=request.user)

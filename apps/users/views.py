@@ -1,7 +1,8 @@
 from django.contrib import messages
-from django.contrib.auth import login, logout
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+
 from .forms import SignUpForm, UserProfileForm
 from .models import UserProfile
 
@@ -28,6 +29,7 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
+
 
 @login_required
 def logout_request(request):
@@ -61,7 +63,8 @@ def edit_profile(request):
 
     Edit Profile
 
-    This method allows a user to edit their profile information. The method is accessed through a POST request to the '/edit_profile/' URL and is only available to logged-in users.
+    This method allows a user to edit their profile information. The method is accessed through a POST request to the
+     '/edit_profile/' URL and is only available to logged-in users.
 
     Parameters:
     - request: The HTTP request object.
