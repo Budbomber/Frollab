@@ -3,6 +3,7 @@ import os
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_POST
 
 from apps.file_sharing.forms import FileUploadForm
 from apps.file_sharing.models import SharedFile
@@ -97,33 +98,9 @@ def download_file(request, file_id):
     raise Http404
 
 
+@require_POST
 @login_required
 def delete_file(request, file_id):
-    """
-    Delete file by file ID.
-
-    This method takes the request and file ID as parameters. It requires the user to be logged in.
-    If the user is authenticated, the method retrieves the file object corresponding to the file ID and the user.
-    If the request method is 'POST', the file is deleted and the user is redirected to the file list page.
-    If the request method is not 'POST', the method renders the file confirm delete template,
-     passing the file object as context.
-
-    Parameters:
-        - request (HttpRequest): The request object for this view.
-        - file_id (int): The ID of the file to be deleted.
-
-    Returns:
-        - If the request method is 'POST', a redirect response to the file list page.
-        - If the request method is not 'POST', a rendered response of the file confirm delete template.
-
-    Raises:
-        - Http404: If the file with the specified file ID and owner does not exist.
-
-    Note:
-        - The user must be logged in for this method to be accessible.
-    """
     file = get_object_or_404(SharedFile, id=file_id, owner=request.user)
-    if request.method == 'POST':
-        file.delete()
-        return redirect('file_list')
-    return render(request, 'file_sharing/file_confirm_delete.html', {'file': file})
+    file.delete()
+    return redirect('file_list')

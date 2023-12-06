@@ -47,3 +47,5 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['organization', 'job_title', 'profile_picture', 'bio', 'location', 'contact_number', 'website_url']
+
+

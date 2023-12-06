@@ -67,8 +67,16 @@
     <ul class="nav flex-column">
         <li class="nav-item"><a href="{% url 'view_profile' %}" class="nav-link">View Profile</a></li>
         <li class="nav-item"><a href="{% url 'edit_profile' %}" class="nav-link">Edit Profile</a></li>
-        <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">Logout</a></li>
-        <!-- Additional links if needed -->
+        <li class="nav-item">
+            <form action="{% url 'logout_request' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger"
+                        onclick="return confirm('Are you sure you want to logout?');">
+                    Logout
+                </button>
+            </form>
+
+        </li>
     </ul>
 </div>
 
@@ -87,7 +95,14 @@
                     {{ task.title }} - {{ task.status }}
                     <div>
                         <a href="{% url 'task_update' task.id %}" class="btn btn-task btn-outline-primary">Edit</a>
-                        <a href="{% url 'task_delete' task.id %}" class="btn btn-task btn-outline-danger">Delete</a>
+                        <form action="{% url 'task_delete' task.pk %}" method="post"
+                              class="btn btn-message btn-outline-danger">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger"
+                                    onclick="return confirm('Are you sure you want to delete the selected task?');">
+                                Delete
+                            </button>
+                        </form>
                     </div>
                 </li>
             {% empty %}
@@ -97,54 +112,53 @@
     </div>
 
 
-<!-- Files Section -->
-<div class="dashboard-section">
-    <h2>Your Files</h2>
-    <a href="{% url 'upload_file' %}" class="btn btn-upload btn-primary">Upload File</a>
-    <ul class="list-group">
-        {% for file in user_files %}
-            <li class="list-group-item">
-                {{ file.title }}
-                <div>
-                    <a href="{{ file.file.url }}" target="_blank" class="btn btn-file btn-outline-primary">View</a>
-                    <a href="{% url 'download_file' file.id %}"
-                       class="btn btn-file btn-outline-secondary">Download</a>
-                </div>
-            </li>
-        {% empty %}
-            <li class="list-group-item">No files found</li>
-        {% endfor %}
-    </ul>
-</div>
+    <!-- Files Section -->
+    <div class="dashboard-section">
+        <h2>Your Files</h2>
+        <a href="{% url 'upload_file' %}" class="btn btn-upload btn-primary">Upload File</a>
+        <ul class="list-group">
+            {% for file in user_files %}
+                <li class="list-group-item">
+                    {{ file.title }}
+                    <div>
+                        <a href="{{ file.file.url }}" target="_blank" class="btn btn-file btn-outline-primary">View</a>
+                        <a href="{% url 'download_file' file.id %}"
+                           class="btn btn-file btn-outline-secondary">Download</a>
+                    </div>
+                </li>
+            {% empty %}
+                <li class="list-group-item">No files found</li>
+            {% endfor %}
+        </ul>
+    </div>
 
-<!-- Messages Section -->
-<div class="dashboard-section">
-    <h2>Your Messages</h2>
-    <a href="{% url 'compose_message' %}" class="btn btn-info">Compose Message</a>
-    <ul class="list-group">
-        {% for message in user_messages %}
-            <li class="list-group-item">
-                From: {{ message.sender.username }} - {{ message.subject }}
-                <p>{{ message.message|truncatechars:50 }}</p>
-                <div>
-                    <a href="{% url 'view_message' message.id %}"
-                       class="btn btn-message btn-outline-primary">View</a>
-                    <form action="{% url 'delete_message' message.id %}" method="post" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-message btn-outline-danger"
-                                onclick="return confirm('Are you sure you want to delete this message?');">
-                            Delete
-                        </button>
-                    </form>
-                </div>
-            </li>
-        {% empty %}
-            <li class="list-group-item">No messages found</li>
-        {% endfor %}
-    </ul>
+    <!-- Messages Section -->
+    <div class="dashboard-section">
+        <h2>Your Messages</h2>
+        <a href="{% url 'compose_message' %}" class="btn btn-info">Compose Message</a>
+        <ul class="list-group">
+            {% for message in user_messages %}
+                <li class="list-group-item">
+                    From: {{ message.sender.username }} - {{ message.subject }}
+                    <p>{{ message.message|truncatechars:50 }}</p>
+                    <div>
+                        <a href="{% url 'view_message' message.id %}"
+                           class="btn btn-message btn-outline-primary">View</a>
+                        <form action="{% url 'delete_message' message.id %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-message btn-outline-danger"
+                                    onclick="return confirm('Are you sure you want to delete this message?');">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </li>
+            {% empty %}
+                <li class="list-group-item">No messages found</li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
-
 
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

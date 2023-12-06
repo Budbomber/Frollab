@@ -1,5 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_POST
+
 from .models import Task
 from .forms import TaskForm
 
@@ -80,26 +82,10 @@ def task_update(request, pk):
     return render(request, 'task_management/task_template/task_form.html', {'form': form})
 
 
+@require_POST
 @login_required()
 def task_delete(request, pk):
-    """
-    Deletes a task.
 
-    This method deletes a task object specified by the primary key (pk) parameter if it belongs to the logged-in user.
-
-    Parameters:
-        request (HttpRequest): The request object sent by the user.
-        pk (int): The primary key of the task to be deleted.
-
-    Returns:
-        HttpResponseRedirect: Redirects the user to the specified URL after deleting the task.
-
-    Example:
-        >> task_delete(request, pk=1)
-    """
     task = get_object_or_404(Task, pk=pk, owner=request.user)
-    if request.method == 'GET':
-        task.delete()
-        next_page = request.GET.get('next', 'dashboard')
-        return redirect(next_page)
-    return render(request, 'task_management/task_template/task_confirm_delete.html', {'task': task})
+    task.delete()
+    return redirect('dashboard')

@@ -1,34 +1,155 @@
 <!DOCTYPE html>
-<html lang=" ">
+<html lang="en">
 <head>
-    <title>Sign Up</title>
+    <title>Dashboard</title>
     <!-- Include Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            padding-top: 50px;
+        }
+
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .modal-content {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+            border-color: #4e555b;
+        }
+
+        h2 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            border-radius: 0;
+        }
+
+        .modal-footer {
+            justify-content: center; /* Center the buttons */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .container {
+                padding-top: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="mt-5">Sign Up</h2>
-            <form method="post" action="{% url 'signup' %}">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="id_username">Username</label>
-                    <input type="text" class="form-control" id="id_username" name="username" placeholder="Username"
-                           required>
+    <!-- Buttons to trigger modals -->
+    <div class="text-center">
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#signUpModal">Sign Up
+        </button>
+        <button type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#loginModal">Login
+        </button>
+    </div>
+    <!-- Sign Up Modal -->
+    <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="signUpModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="signUpModalLabel">Sign Up</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label for="id_password1">Password</label>
-                    <input type="password" class="form-control" id="id_password1" name="password1"
-                           placeholder="Password" required>
+                <div class="modal-body">
+                    <!-- Sign Up Form -->
+                    <form method="post" action="{% url 'signup' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_username">Username</label>
+                            <input type="text" class="form-control" id="id_username" name="username"
+                                   placeholder="Username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_password1">Password</label>
+                            <input type="password" class="form-control" id="id_password1" name="password1"
+                                   placeholder="Password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_password2">Confirm Password</label>
+                            <input type="password" class="form-control" id="id_password2" name="password2"
+                                   placeholder="Confirm Password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Sign Up</button>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="id_password2">Confirm Password</label>
-                    <input type="password" class="form-control" id="id_password2" name="password2"
-                           placeholder="Confirm Password" required>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <!-- You can add more buttons or text here if needed -->
                 </div>
-                <button type="submit" class="btn btn-primary">Sign Up</button>
-            </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Login Form -->
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_username">Username</label>
+                            <input type="text" class="form-control" id="id_username" name="username"
+                                   placeholder="Enter username">
+                        </div>
+                        <div class="form-group">
+                            <label for="id_password">Password</label>
+                            <input type="password" class="form-control" id="id_password" name="password"
+                                   placeholder="Password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <!-- You can add more buttons or text here if needed -->
+                </div>
+            </div>
         </div>
     </div>
 </div>

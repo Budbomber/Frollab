@@ -14,8 +14,8 @@ from apps.users.views import logout_request
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    path('logout/', logout_request, name='logout'),
+    path('login/', auth_views.LoginView.as_view(template_name='signup.html'), name='login'),
+    path('logout/', logout_request, name='logout_request'),
     path('signup/', signup, name='signup'),
     path('tasks/', views.task_list, name='task_list'),
     path('tasks/create/', views.task_create, name='task_create'),

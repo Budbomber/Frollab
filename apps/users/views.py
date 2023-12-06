@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.views.decorators.http import require_POST
 
 from .forms import SignUpForm, UserProfileForm
 from .models import UserProfile
@@ -31,30 +32,12 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 
+@require_POST
 @login_required
 def logout_request(request):
-    """
 
-    This method handles the logout functionality for a logged-in user.
-
-    Parameters:
-    - request (object): The HTTP request object.
-
-    Returns:
-    - If the request method is 'POST':
-        - Redirects the user to the login page after logging out successfully.
-    - If the request method is not 'POST':
-        - Renders the 'logout.html' template.
-
-    Example Usage:
-    logout_request(request)
-
-    """
-    if request.method == 'POST':
-        logout(request)
-        messages.info(request, "Logged out successfully!")
-        return redirect('login')
-    return render(request, 'logout.html')
+    logout(request)
+    return redirect('login')
 
 
 @login_required
