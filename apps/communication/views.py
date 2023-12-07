@@ -9,6 +9,7 @@ from apps.communication.models import Message
 User = get_user_model()
 
 
+
 @login_required
 def view_message(request, message_id):
     """
@@ -37,6 +38,10 @@ def view_message(request, message_id):
         reply.subject = f'Re: {message.subject}'
         reply.save()
         return redirect('view_message', message_id=message_id)
+
+    if not message.is_read:
+        message.is_read = True
+        message.save()
     return render(request, 'messaging/message_detail.html',
                   {'message': message, 'reply_form': reply_form})
 
@@ -88,3 +93,11 @@ def compose_message(request):
         return redirect('dashboard')
 
     return render(request, 'messaging/compose_message.html', {'form': form})
+
+
+@login_required
+def mark_message_as_read(request, message_id):
+    message = get_object_or_404(Message, id=message_id, receiver=request.user)
+    message.is_read = True
+    message.save()
+    return redirect('view_message', message_id=message_id)

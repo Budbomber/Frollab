@@ -36,6 +36,13 @@ class Task(models.Model):
     deadline_date = models.DateField(null=True)
     deadline_time = models.TimeField(null=True)
 
+    def status_class(self):
+        return {
+            'todo': 'bg-danger',
+            'in_progress': 'bg-warning',
+            'done': 'bg-success',
+        }.get(self.status, 'bg-secondary')
+
     def __str__(self):
         return (f"{self.title} - {self.get_status_display()} - {self.owner} -"
                 f" {self.deadline_date} - {self.deadline_time}")

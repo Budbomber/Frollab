@@ -7,39 +7,6 @@ from apps.task_management.models import Task
 
 
 class UserProfile(models.Model):
-    """
-    Class: UserProfile
-
-    This class represents the user profile of a Django User model. It extends the Django `models.Model` class and
-     provides additional fields to store information about the user's organization, job title, profile picture,
-     bio, location, contact number, and website URL.
-
-    Attributes:
-    - user (OneToOneField): The user associated with this user profile.
-    - organization (CharField): The organization the user belongs to. It is a string with a maximum length
-    of 100 characters. It can be blank.
-    - job_title (CharField): The job title of the user. It is a string with a maximum length of 100 characters.
-     It can be blank.
-    - profile_picture (ImageField): The profile picture of the user. It is an image file that can be uploaded to the
-    'profile_pictures/' directory. It can be blank and nullable.
-    - bio (TextField): The biography or description of the user. It is a text field that can be blank.
-    - location (CharField): The location of the user. It is a string with a maximum length of 100 characters.
-     It can be blank.
-    - contact_number (CharField): The contact number of the user. It is a string with a maximum length of 100
-     characters. It can be blank.
-    - website_url (CharField): The URL of the user's website. It is a string with a maximum length of 100
-     characters. It can be blank.
-
-    Methods:
-    - assigned_tasks(): Returns the tasks assigned to the user. It filters the
-    `Task` model based on the user as the assignee.
-
-    Example usage:
-        user_profile = UserProfile.objects.get(user=user)
-        assigned_tasks = user_profile.assigned_tasks()
-
-    Note: This class should be used in conjunction with Django's User model for user authentication and authorization.
-    """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     organization = models.CharField(max_length=100, blank=True)
     job_title = models.CharField(max_length=100, blank=True)

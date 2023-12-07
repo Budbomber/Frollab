@@ -1,168 +1,489 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html data-bs-theme="light" lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>User Dashboard</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            padding-top: 56px;
-        }
-
-        .sidebar {
-            position: fixed;
-            top: 56px;
-            left: 0;
-            width: 200px;
-            height: 100vh;
-            background: #f8f9fa;
-            padding: 20px;
-        }
-
-        .main-content {
-            margin-left: 200px;
-            padding: 20px;
-        }
-
-        .navbar-brand, .nav-link {
-            font-weight: bold;
-        }
-
-        .dashboard-section {
-            margin-bottom: 40px;
-        }
-
-        .dashboard-header {
-            margin-bottom: 20px;
-        }
-
-        .dashboard-section h2 {
-            color: #007bff;
-            margin-bottom: 15px;
-        }
-
-        .list-group-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .btn-file, .btn-message {
-            margin-left: 10px;
-        }
-
-        .btn-upload {
-            margin-bottom: 15px;
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Dash Test - Brand</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
 </head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'dashboard' %}">Dashboard</a>
+<style>
+    .task-card {
+        transition: transform .3s ease, box-shadow .3s ease; /* Smooth transition for hover effect */
+    }
+
+    .task-card .card-body .mt-auto > div {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem; /* Adjust the space between the buttons */
+    }
+
+    /* Align 'Assigned to' and status badge */
+    .task-card .card-body .mt-auto > div:first-child {
+        display: flex;
+        gap: 10px; /* Adjust the space between 'Assigned to' text and status badge */
+        align-items: center;
+    }
+
+    /* Make buttons and status badge inline */
+    .task-card .card-body .mt-auto > div:last-child {
+        display: flex;
+        align-items: center;
+        gap: 5px; /* Adjust the space between Edit and Delete buttons */
+    }
+
+    .task-card .card-body .mt-auto form {
+        margin: 0; /* Reset any margins that might push it off alignment */
+        display: flex; /* This makes the form behave like a flex item */
+        align-items: center; /* Aligns the button vertically */
+    }
+
+
+    /* Bottom part of the card */
+    .task-card .card-body .mt-auto {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .task-card .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card-header, .task-card .card-body {
+        background-color: #f8f9fa; /* Light grey header and card body for subtle contrast */
+    }
+
+    .task-card:hover {
+        transform: translateY(-5px); /* Slightly raise the card on hover for emphasis */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+    }
+
+    .card-header {
+        background-color: #f8f9fa; /* Light grey header for subtle contrast */
+        border-bottom: 1px solid #eaecef; /* A light border for the header */
+    }
+
+    .card-body .mt-auto {
+        padding: 1rem;
+        background-color: #f8f9fa; /* Same as card-header for visual grouping of footer content */
+        border-top: 1px solid #eaecef; /* Top border to separate from the card content */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+
+    .card-title {
+        font-size: 1.25rem;
+        color: #333;
+    }
+
+    .card-text {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem; /* Smaller text for descriptions and due date */
+        color: #666;
+    }
+
+    .text-muted {
+        font-size: 0.75rem; /* Smaller text for 'Assigned to' */
+        margin-right: 0.5rem;
+    }
+
+    .badge {
+        font-size: 0.85rem; /* Adjust the badge font size as needed */
+        padding: 0.4em 0.75em;
+        font-weight: 500;
+    }
+
+    .btn-outline-primary, .btn-outline-danger {
+        font-size: 0.8rem;
+        font-weight: 400;
+    }
+
+    .btn-sm {
+        padding: .25rem .6rem;
+        font-size: .875rem;
+        line-height: 1.5;
+        border-radius: .2rem;
+    }
+
+    @media (max-width: 767px) {
+        .task-card .card-body .mt-auto > div:first-child,
+        .task-card .card-body .mt-auto > div:last-child {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .task-card .card-body .mt-auto > div:last-child > a,
+        .task-card .card-body .mt-auto > div:last-child > form {
+            width: 100%; /* Full width buttons on smaller screens */
+            margin-top: 5px; /* Space between stacked buttons */
+        }
+    }
+
+    /* Media query to control card width on larger screens */
+    @media (max-width: 767px) {
+        .row-cols-1 > * {
+            max-width: 100%; /* Cards take full width on small screens */
+            flex: 0 0 100%; /* Prevents flex items from shrinking */
+        }
+
+        .card-body {
+            padding: 1rem; /* Adds padding inside cards */
+        }
+
+        .btn-group, .card-body .mt-auto {
+            flex-direction: column; /* Stack elements vertically on small screens */
+            align-items: stretch; /* Align buttons to stretch to full width */
+        }
+
+        .btn-group > a, .card-body .mt-auto > a, .card-body .mt-auto form {
+            width: 100%; /* Full width buttons */
+            margin-top: 0.5rem; /* Space between stacked buttons */
+        }
+
+        /* Increase the spacing between the buttons in the task section specifically */
+        .task-section .btn-group > a, .task-section .btn-group form {
+            margin-bottom: 0.5rem; /* Ensure there's space below each button */
+        }
+
+        /* Ensure adequate spacing between Edit and Delete buttons */
+        .task-card .btn-outline-primary {
+            margin-bottom: 0.5rem;
+        }
+
+        .task-card .card-body .mt-auto {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .task-card .card-body .mt-auto > div {
+            justify-content: center;
+            width: 100%;
+        }
+
+        .task-card .card-body .mt-auto form button {
+            width: 100%;
+        }
+
+        .task-card .card-body .mt-auto > div > a,
+        .task-card .card-body .mt-auto > div > form {
+            width: 100%;
+            margin-top: 0.5rem; /* Adds a top margin to the button/form when stacked */
+        }
+    }
+
+</style>
+<body id="page-top">
+<div id="wrapper">
+    <nav class="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark">
+        <div class="container-fluid d-flex flex-column p-0"><a
+                class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+            <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
+            <div class="sidebar-brand-text mx-3"><span>frollab</span></div>
+        </a>
+            <hr class="sidebar-divider my-0">
+            <ul class="navbar-nav text-light" id="accordionSidebar"></ul>
+            <div class="text-center d-none d-md-inline">
+                <button class="btn rounded-circle border-0 btn-sm" id="sidebarToggle" type="button"></button>
+            </div>
+            <div class="btn-group" role="group" style="position: relative;display: grid;overflow: visible;"><a
+                    class="btn btn-primary btn-sm" role="button" style="margin: 4px;" href="{% url 'view_profile' %}">View
+                Profile</a><a class="btn btn-primary btn-sm" role="button" style="margin: 4px;"
+                              href="{% url 'edit_profile' %}">Edit profile</a>
+                <form method="post" action="{% url 'logout_request' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+            <nav class="navbar navbar-expand bg-white shadow mb-4 topbar static-top navbar-light">
+                <div class="container-fluid">
+                    <button class="btn btn-link d-md-none btn-sm rounded-circle me-3" id="sidebarToggleTop"
+                            type="button"><i
+                            class="fas fa-bars"></i></button>
+                    <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group"><label>
+                            <input class="bg-light form-control border-0 small" type="text"
+                                   placeholder="Search for ...">
+                        </label>
+                            <button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button>
+                        </div>
+                    </form>
+                    <ul class="navbar-nav flex-nowrap ms-auto">
+                        <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link"
+                                                                            aria-expanded="false"
+                                                                            data-bs-toggle="dropdown" href="#"><i
+                                class="fas fa-search"></i></a>
+                            <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in"
+                                 aria-labelledby="searchDropdown">
+                                <form class="me-auto navbar-search w-100">
+                                    <div class="input-group"><label>
+                                        <input class="bg-light form-control border-0 small"
+                                               type="text" placeholder="Search for ...">
+                                    </label>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary py-0" type="button"><i
+                                                    class="fas fa-search"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
+                                                                       aria-expanded="false" data-bs-toggle="dropdown"
+                                                                       href="#"><span
+                                    class="badge bg-danger badge-counter">3+</span><i class="fas fa-bell fa-fw"></i></a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
+                                    <h6 class="dropdown-header">alerts center</h6><a
+                                        class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="me-3">
+                                        <div class="bg-primary icon-circle"><i class="fas fa-file-alt text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div><span class="small text-gray-500">December 12, 2019</span>
+                                        <p>A new monthly report is ready to download!</p>
+                                    </div>
+                                </a><a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="me-3">
+                                        <div class="bg-success icon-circle"><i class="fas fa-donate text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div><span class="small text-gray-500">December 7, 2019</span>
+                                        <p>$290.29 has been deposited into your account!</p>
+                                    </div>
+                                </a><a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="me-3">
+                                        <div class="bg-warning icon-circle"><i
+                                                class="fas fa-exclamation-triangle text-white"></i></div>
+                                    </div>
+                                    <div><span class="small text-gray-500">December 2, 2019</span>
+                                        <p>Spending Alert: We've noticed unusually high spending for your account.</p>
+                                    </div>
+                                </a><a class="dropdown-item text-center small text-gray-500" href="#">Show All
+                                    Alerts</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <div class="nav-item dropdown no-arrow">
+                                <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown"
+                                   href="#">
+                                    <span class="badge bg-danger badge-counter">{{ alerts.count }}</span>
+                                    <i class="fas fa-envelope fa-fw"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
+                                    <h6 class="dropdown-header">Message Center</h6>
+                                    {% for alert in alerts %}
+                                        <a class="dropdown-item d-flex align-items-center"
+                                           href="{% url 'mark_message_as_read' alert.id %}">
+                                            <div class="me-3">
+                                                <div class="bg-primary icon-circle"><i
+                                                        class="fas fa-file-alt text-white"></i></div>
+                                            </div>
+                                            <div>
+                                                <span class="small text-gray-500">{{ alert.date_created }}</span>
+                                                <p>{{ alert.message }}</p>
+                                            </div>
+                                        </a>
+                                    {% empty %}
+                                        <a class="dropdown-item text-center small text-gray-500" href="#">No Alerts</a>
+                                    {% endfor %}
+                                    <a class="dropdown-item text-center small text-gray-500" href="#">Show All
+                                        Alerts</a>
+                                </div>
+                            </div>
+                        </li>
+                        <div class="d-none d-sm-block topbar-divider"></div>
+                        <li class="nav-item dropdown no-arrow">
+                            <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
+                                                                       aria-expanded="false" data-bs-toggle="dropdown"
+                                                                       href="#"><img
+                                    class="border rounded-circle img-profile"
+                                    src="images/avatars/avatar1.jpeg?h=0ecc82101fb9a10ca459432faa8c0656" alt=""></a>
+                                <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a
+                                        class="dropdown-item" href="{% url 'view_profile' %}"><i
+                                        class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a
+                                        class="dropdown-item" href="#"><i
+                                        class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>Settings</a><a
+                                        class="dropdown-item" href="#"><i
+                                        class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Activity log</a>
+                                    <div class="dropdown-divider"></div>
+                                    <form method="post" action="{% url 'logout_request' %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>Logout
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="container-fluid">
+                <h1 class="text-dark mb-1 text-center pb-3">Dashboard</h1>
+            </div>
+            <div class="card">
+                <div class="card-header bg-white text-center task-section ">
+                    <h4 class="mb-0">Your Tasks</h4>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'task_create' %}" class="btn btn-outline-success btn-sm">Add Task</a>
+
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="d-flex justify-content-center mb-3 pt-2">
+
+                    </div>
+                    <div class="row row-cols-1 row-cols-md-3 g-4 px-3">
+                        {% for task in user_tasks %}
+                            <div class="col">
+                                <div class="task-card card mb-3">
+                                    <div class="card-body d-flex flex-column h-100">
+                                        <h5 class="card-title text-center">{{ task.title }}</h5>
+                                        <p class="card-text text-center">{{ task.description }}</p>
+                                        <p class="card-text text-center">Due: {{ task.deadline_date|date:"M d, Y" }}
+                                            at {{ task.deadline_time|time:"H:i" }}</p>
+                                        <div class="mt-auto d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center"><small
+                                                    class="text-muted">Assigned: {{ task.owner }}</small>
+                                                <span class="badge rounded-pill {{ task.status_class }}">{{ task.get_status_display }}</span>
+                                            </div>
+
+                                            <div>
+                                                <a href="{% url 'task_update' task.id %}"
+                                                   class="btn btn-outline-primary btn-sm me-2">Edit</a>
+                                                <form action="{% url 'task_delete' task.pk %}" method="post"
+                                                      class="d-inline">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm">Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">
+                                <p class="text-center">No tasks found</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-header bg-white text-center">
+                    <h4 class="mb-0">Your Files</h4>
+                </div>
+                <div class="card-body p-0">
+                    <div class="d-flex justify-content-center mb-3 pt-2">
+                        <a href="{% url 'upload_file' %}" class="btn btn-outline-success btn-sm">Upload File</a>
+                    </div>
+                    <div class="row row-cols-1 row-cols-md-3 g-4 px-3">
+                        {% for file in user_files %}
+                            <div class="col">
+                                <div class="task-card card mb-3">
+                                    <div class="card-body d-flex flex-column h-100 text-center">
+                                        <h5 class="card-title">{{ file.title }}</h5>
+                                        <p class="card-text">{{ file.file.name }}</p>
+                                        <p class="card-text">{{ file.file.size|filesizeformat }}</p>
+                                        <p class="card-text mb-4">Uploaded: {{ file.uploaded_at|date:"M d, Y H:i" }}</p>
+                                        <div class="mt-auto">
+                                            <a href="{{ file.file.url }}" target="_blank"
+                                               class="btn btn-outline-success btn-sm me-2">View</a>
+                                            <a href="{% url 'download_file' file.id %}"
+                                               class="btn btn-outline-primary btn-sm me-2">Download</a>
+                                            <form action="{% url 'delete_file' file.id %}" method="post"
+                                                  class="d-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                        onclick="return confirm('Are you sure?');">Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">
+                                <p class="text-center">No files found</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-white text-center">
+                    <h4 class="mb-0">Your Messages</h4>
+                </div>
+                <div class="card-body p-0">
+                    <div class="d-flex justify-content-center mb-3 pt-2">
+                        <a href="{% url 'compose_message' %}" class="btn btn-outline-primary btn-sm">Compose Message</a>
+                    </div>
+                    <div class="row row-cols-1 row-cols-md-3 g-4 px-3">
+                        {% for message in user_messages %}
+                            <div class="col">
+                                <div class="task-card card mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center">From: {{ message.sender.username }}</h5>
+                                        <h6 class="card-subtitle text-muted text-center mb-2">{{ message.subject }}</h6>
+                                        <p class="card-text text-center">{{ message.message|truncatechars:50 }}</p>
+                                        <div class="mt-3 d-flex justify-content-between align-items-center">
+                                            <a href="{% url 'view_message' message.id %}"
+                                               class="btn btn-outline-success btn-sm me-2">View</a>
+                                            <form action="{% url 'delete_message' message.id %}" method="post"
+                                                  class="d-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                        onclick="return confirm('Are you sure you want to delete this message?');">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">
+                                <p class="text-center">No messages found</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <footer class="bg-white sticky-footer">
+            <div class="container my-auto">
+                <div class="text-center my-auto copyright"><span>Copyright © Brand 2023</span></div>
+            </div>
+        </footer>
     </div>
-</nav>
-
-<div class="sidebar">
-    <ul class="nav flex-column">
-        <li class="nav-item"><a href="{% url 'view_profile' %}" class="nav-link">View Profile</a></li>
-        <li class="nav-item"><a href="{% url 'edit_profile' %}" class="nav-link">Edit Profile</a></li>
-        <li class="nav-item">
-            <form action="{% url 'logout_request' %}" method="post" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger"
-                        onclick="return confirm('Are you sure you want to logout?');">
-                    Logout
-                </button>
-            </form>
-
-        </li>
-    </ul>
+    <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
 </div>
-
-<div class="main-content">
-    <div class="dashboard-header">
-        <h1>Welcome to Your Dashboard</h1>
-    </div>
-
-    <!-- Tasks Section -->
-    <div class="dashboard-section">
-        <h2>Your Tasks</h2>
-        <a href="{% url 'task_create' %}?next=dashboard" class="btn btn-success">Add New Task</a>
-        <ul class="list-group">
-            {% for task in user_tasks %}
-                <li class="list-group-item">
-                    {{ task.title }} - {{ task.status }}
-                    <div>
-                        <a href="{% url 'task_update' task.id %}" class="btn btn-task btn-outline-primary">Edit</a>
-                        <form action="{% url 'task_delete' task.pk %}" method="post"
-                              class="btn btn-message btn-outline-danger">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger"
-                                    onclick="return confirm('Are you sure you want to delete the selected task?');">
-                                Delete
-                            </button>
-                        </form>
-                    </div>
-                </li>
-            {% empty %}
-                <li class="list-group-item">No tasks found</li>
-            {% endfor %}
-        </ul>
-    </div>
-
-
-    <!-- Files Section -->
-    <div class="dashboard-section">
-        <h2>Your Files</h2>
-        <a href="{% url 'upload_file' %}" class="btn btn-upload btn-primary">Upload File</a>
-        <ul class="list-group">
-            {% for file in user_files %}
-                <li class="list-group-item">
-                    {{ file.title }}
-                    <div>
-                        <a href="{{ file.file.url }}" target="_blank" class="btn btn-file btn-outline-primary">View</a>
-                        <a href="{% url 'download_file' file.id %}"
-                           class="btn btn-file btn-outline-secondary">Download</a>
-                    </div>
-                </li>
-            {% empty %}
-                <li class="list-group-item">No files found</li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <!-- Messages Section -->
-    <div class="dashboard-section">
-        <h2>Your Messages</h2>
-        <a href="{% url 'compose_message' %}" class="btn btn-info">Compose Message</a>
-        <ul class="list-group">
-            {% for message in user_messages %}
-                <li class="list-group-item">
-                    From: {{ message.sender.username }} - {{ message.subject }}
-                    <p>{{ message.message|truncatechars:50 }}</p>
-                    <div>
-                        <a href="{% url 'view_message' message.id %}"
-                           class="btn btn-message btn-outline-primary">View</a>
-                        <form action="{% url 'delete_message' message.id %}" method="post" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-message btn-outline-danger"
-                                    onclick="return confirm('Are you sure you want to delete this message?');">
-                                Delete
-                            </button>
-                        </form>
-                    </div>
-                </li>
-            {% empty %}
-                <li class="list-group-item">No messages found</li>
-            {% endfor %}
-        </ul>
-    </div>
-</div>
-
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'js/theme.js' %}"></script>
 </body>
+
 </html>

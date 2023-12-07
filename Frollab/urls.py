@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from apps.communication.views import view_message, delete_message, compose_message
+from apps.communication.views import view_message, delete_message, compose_message, mark_message_as_read
 from apps.task_management import views
 from apps.users.views import signup, edit_profile, view_profile
 from apps.file_sharing.views import upload_file, file_list, delete_file
@@ -31,7 +31,9 @@ urlpatterns = [
     path('message/<int:message_id>/', view_message, name='view_message'),
     path('message/<int:message_id>/delete/', delete_message, name='delete_message'),
     path('compose/', compose_message, name='compose_message'),
+    path('message/<int:message_id>/read/', mark_message_as_read, name='mark_message_as_read'),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -16,7 +16,10 @@ from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = '/shared_files/'
-
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # adjust the path if your static directory is located elsewhere
+]
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # again, adjust the path as needed
 MEDIA_ROOT = os.path.join(BASE_DIR, 'shared_files')
 
 # Quick-start development settings - unsuitable for production
@@ -26,9 +29,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'shared_files')
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '127.0.0.1:8000']
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -127,7 +130,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

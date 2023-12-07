@@ -6,44 +6,46 @@ from apps.communication.models import Message
 from apps.file_sharing.models import SharedFile
 from apps.task_management.models import Task
 from apps.task_management.views import TaskForm
+from apps.user_dashboard.models import Alert
+
+DASHBOARD_HTML_PATH = 'dashboard.html'
 
 
 class Dashboard(LoginRequiredMixin, View):
-    """
-    The Dashboard class provides functionality for the user dashboard page.
 
-    It includes methods for displaying and handling user tasks, shared files, and messages.
-
-    Inherits:
-        LoginRequiredMixin: A Django mixin to enforce authentication for accessing the dashboard.
-
-    Methods:
-        get: Handles GET requests and renders the dashboard page.
-        post: Handles POST requests and adds a new task to the user's task list.
-    """
     @staticmethod
-    def get(request):
-        user_tasks = Task.objects.filter(owner=request.user)
-        user_files = SharedFile.objects.filter(owner=request.user)
-        user_messages = Message.objects.filter(receiver=request.user)
-        form = TaskForm()
+    def _get_user_data(request):
+        user = request.user
+        user_tasks = Task.objects.filter(owner=user)
+        user_files = SharedFile.objects.filter(owner=user)
+        user_messages = Message.objects.filter(receiver=user)
+        alerts = Message.objects.filter(receiver=user, is_read=False)
+        return user_tasks, user_files, user_messages, alerts
 
+    def get(self, request):
+        user_tasks, user_files, user_messages, alerts = self._get_user_data(request)
         context = {
             'user_tasks': user_tasks,
-            'task_form': form,
+            'task_form': TaskForm(),
             'user_files': user_files,
             'user_messages': user_messages,
+            'alerts': alerts,
         }
-
-        return render(request, 'dashboard.html', context)
+        return render(request, DASHBOARD_HTML_PATH, context)
 
     def post(self, request):
+        user = request.user
         form = TaskForm(request.POST)
+        user_tasks, _, _, _ = self._get_user_data(request)
         if form.is_valid():
             new_task = form.save(commit=False)
-            new_task.owner = request.user
+            new_task.owner = user
             new_task.save()
             return redirect('dashboard')
+        return render(request, DASHBOARD_HTML_PATH, {'user_tasks': user_tasks, 'task_form': form})
 
-        user_tasks = Task.objects.filter(owner=request.user)
-        return render(request, 'dashboard.html', {'user_tasks': user_tasks, 'task_form': form})
+    @staticmethod
+    def dashboard(request):
+        user = request.user
+        alerts = Alert.objects.filter(user=user, read=False)
+        return render(request, DASHBOARD_HTML_PATH, {'alerts': alerts})

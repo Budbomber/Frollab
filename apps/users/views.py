@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -72,21 +71,7 @@ def edit_profile(request):
 
 @login_required
 def view_profile(request):
-    """
 
-    View the user profile.
-
-    This method is a view function that displays the user's profile. It is only accessible to authenticated users,
-    meaning users who have already logged in. The method retrieves the user's profile from the database and renders
-    the view_profile.html template with the profile data.
-
-    Parameters:
-    - request: The HTTP request object.
-
-    Returns:
-    - A rendered template response that displays the user's profile.
-
-    """
     try:
         profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
